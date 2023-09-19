@@ -1,37 +1,40 @@
-import { ref } from "vue";
+import { FIELD, GAME_STATUS } from '@/constans';
+import { computed } from 'vue';
 
-export default function(init, fields, difficult, number) {
-  let preview = ref(false)
-
+export default function (init, fields, difficult, number, gameStatus) {
   const start = () => {
     init();
     prepareGame();
-  }
+  };
 
   const prepareGame = () => {
-    preview.value = true
+    gameStatus.value = GAME_STATUS.PREVEW;
 
     for (let i = 0; i < difficult.value; i++) {
       const index = rand(0, number - 1);
 
-      if (fields.value[index].value !== 1) {
-        fields.value[index].value = 1;
+      if (fields.value[index].value !== FIELD.FILLED) {
+        fields.value[index].value = FIELD.FILLED;
       } else {
         i--;
       }
     }
 
     setTimeout(() => {
-      preview.value = false
+      gameStatus.value = GAME_STATUS.STARTED;
     }, 2000);
-  }
+  };
 
   const rand = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
-  }
+  };
+
+  const canStartGame = computed(() => {
+    return gameStatus.value !== GAME_STATUS.PREVEW
+  })
 
   return {
     start,
-    preview
-  }
+    canStartGame,
+  };
 }
