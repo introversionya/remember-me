@@ -14,6 +14,14 @@
       Сложность: <strong>{{ difficult }}</strong>
     </p>
 
+    <p class="win" v-if="isWin">
+      Поздравляем! Продолжаем играть!
+    </p>
+
+    <p class="fail" v-if="isFail">
+      Вы проиграли. Попробуйте еще раз!
+    </p>
+
     <button
       class="btn"
       @click="start"
@@ -25,12 +33,12 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref } from 'vue';
 import BoardItem from '@/components/BoardItem.vue';
-import useGameInit from '@/components/composables/useGameInit'
-import useGameStart from '@/components/composables/useGameStart'
-import useGameProcess from '@/components/composables/useGameProcess'
-import { GAME_STATUS } from '@/constans'
+import useGameInit from '@/components/composables/useGameInit';
+import useGameStart from '@/components/composables/useGameStart';
+import useGameProcess from '@/components/composables/useGameProcess';
+import { GAME_STATUS } from '@/constans';
 
 export default {
   name: 'Board',
@@ -40,16 +48,15 @@ export default {
   },
 
   setup() {
-
-    const gameStatus = ref(GAME_STATUS.NONE)
+    const gameStatus = ref(GAME_STATUS.NONE);
 
     const number = 25;
 
-    const { difficult, fields, init } = useGameInit(number)
+    const { difficult, fields, init } = useGameInit(number);
 
-    const { start, canStartGame } = useGameStart(init, fields, difficult, number, gameStatus)
+    const { start, canStartGame } = useGameStart(init, fields, difficult, number, gameStatus);
 
-    const { selectField } = useGameProcess(fields)
+    const { selectField, isWin, isFail } = useGameProcess(fields, gameStatus, difficult, start);
 
     return {
       number,
@@ -59,7 +66,9 @@ export default {
       start,
       gameStatus,
       canStartGame,
-      selectField
+      selectField,
+      isWin,
+      isFail
     };
   },
 };
@@ -91,5 +100,13 @@ export default {
 .btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.win {
+  color: #42b983;
+}
+
+.fail {
+  color: #ff000055;
 }
 </style>

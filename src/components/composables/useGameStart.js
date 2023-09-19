@@ -1,4 +1,4 @@
-import { FIELD, GAME_STATUS } from '@/constans';
+import { FIELD, GAME_STATUS, GAME_SPEED } from '@/constans';
 import { computed } from 'vue';
 
 export default function (init, fields, difficult, number, gameStatus) {
@@ -22,7 +22,7 @@ export default function (init, fields, difficult, number, gameStatus) {
 
     setTimeout(() => {
       gameStatus.value = GAME_STATUS.STARTED;
-    }, 2000);
+    }, GAME_SPEED);
   };
 
   const rand = (min, max) => {
@@ -30,7 +30,7 @@ export default function (init, fields, difficult, number, gameStatus) {
   };
 
   const canStartGame = computed(() => {
-    return gameStatus.value !== GAME_STATUS.PREVEW
+    return gameStatus.value !== GAME_STATUS.PREVEW && gameStatus.value !== GAME_STATUS.WIN
   })
 
   return {
